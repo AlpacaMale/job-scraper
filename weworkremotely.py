@@ -29,4 +29,4 @@ def scrape_wwr(keyword):
             "link": f"https://weworkremotely.com{link}",
         }
         all_jobs.append(job_data)
-    return all_jobs[0]
+    return all_jobs

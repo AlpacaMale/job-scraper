@@ -34,4 +34,4 @@ def scrape_remoteok(keyword):
             "link": link,
         }
         all_jobs.append(job_data)
-    return all_jobs[0]
+    return all_jobs

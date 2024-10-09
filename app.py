@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request
-from 
+from remoteok import scrape_remoteok
+from weworkremotely import scrape_wwr
 
 app = Flask("JobScrapper")
+
 
 @app.route("/")
 def home():
@@ -11,7 +13,10 @@ def home():
 @app.route("/search")
 def search():
     keyword = request.args.get("keyword")
-    return render_template("search.html", keyword=keyword)
+    wwr = scrape_wwr(keyword)
+    remote = scrape_remoteok(keyword)
+    jobs = wwr + remote
+    return render_template("search.html", keyword=keyword, jobs=jobs)
 
 
 app.run(debug=True)
