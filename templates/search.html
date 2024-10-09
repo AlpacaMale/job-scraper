@@ -11,11 +11,12 @@
 <body>
     <main class="container">
         <h1>Search Results for "{{keyword}}": </h1>
+        <a href="/export?keyword={{keyword}}" target="_blank">Export to file</a>
         <figure>
             <table class="striped">
                 <thead>
                     <tr>
-                        <th>Position</th>
+                        <th>Title</th>
                         <th>Company</th>
                         <th>Region</th>
                         <th>Link</th>
@@ -24,7 +25,7 @@
                 <tbody>
                     {% for job in jobs %}
                     <tr>
-                        <td>{{job.position}}</td>
+                        <td>{{job.title}}</td>
                         <td>{{job.company}}</td>
                         <td>{{job.region}}</td>
                         <td><a href="{{job.link}}" target="_blank">Apply now &rarr;</a></td>
