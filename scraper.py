@@ -3,6 +3,8 @@ import time
 from bs4 import BeautifulSoup
 from config import user_agent
 
+IDLE = 1
+
 
 def scrape_wanted(keyword):
     p = sync_playwright().start()
@@ -10,7 +12,7 @@ def scrape_wanted(keyword):
     context = browser.new_context(extra_http_headers={"User-Agent": user_agent})
     page = context.new_page()
     page.goto(f"https://www.wanted.co.kr/search?query={keyword}&tab=position")
-    time.sleep(2)
+    time.sleep(IDLE)
     for _ in range(3):
         page.keyboard.down("End")
         time.sleep(0.3)
@@ -22,12 +24,14 @@ def scrape_wanted(keyword):
     for job in jobs:
         title = job.select_one("strong").text
         company = job.select_one(".JobCard_companyName__N1YrF").text
+        region = "Korea"
         link = job.select_one("a")["href"]
         job_info.append(
             {
                 "title": title,
                 "company": company,
                 "link": f"https://www.wanted.co.kr{link}",
+                "region": region,
             }
         )
     return job_info
@@ -40,7 +44,7 @@ def scrape_remoteok(keyword):
     browser = p.chromium.launch(headless=True)
     page = browser.new_page()
     page.goto(url)
-    time.sleep(2)
+    time.sleep(IDLE)
     content = page.content()
     p.stop()
     soup = BeautifulSoup(content, "html.parser")
@@ -71,7 +75,7 @@ def scrape_wwr(keyword):
     browser = p.chromium.launch(headless=True)
     page = browser.new_page()
     page.goto(url)
-    time.sleep(2)
+    time.sleep(IDLE)
     content = page.content()
     p.stop()
 
