@@ -1,7 +1,11 @@
-def save_to_file(file_name, jobs):
-    file = open(f"{file_name}.csv", "w")
-    file.write("Title,Company,Region,URL\n")
+import os
+import csv
 
-    for job in jobs:
-        file.write(f"{job['title']},{job['company']},{job['region']},{job['link']}\n")
-    file.close()
+
+def save_to_file(file_name, jobs):
+    os.makedirs("data", exist_ok=True)
+    with open(f"data/{file_name}.csv", "w", encoding="utf-8") as file:
+        fieldnames = ["title", "company", "region", "link"]
+        writer = csv.DictWriter(file, fieldnames=fieldnames, extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(jobs)
