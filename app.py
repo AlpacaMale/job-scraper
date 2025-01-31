@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, send_file
-from remoteok import scrape_remoteok
-from weworkremotely import scrape_wwr
+from scraper import scrape_remoteok, scrape_wanted, scrape_wwr
 from file import save_to_file
 
 app = Flask("JobScrapper")
@@ -23,7 +22,8 @@ def search():
     else:
         wwr = scrape_wwr(keyword)
         remote = scrape_remoteok(keyword)
-        jobs = wwr + remote
+        wanted = scrape_wanted(keyword)
+        jobs = wwr + remote + wanted
         db[keyword] = jobs
     return render_template("search.html", keyword=keyword, jobs=jobs)
 
