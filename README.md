@@ -47,11 +47,11 @@ pip install -r requirements.txt
 
 4. **Set user-agent**
 
-`config.py`
+   `config.py`
 
-```
-user_agent = "Your User-Agent String"
-```
+   ```
+   user_agent = "Your User-Agent String"
+   ```
 
 5. **Run main.py**
 
