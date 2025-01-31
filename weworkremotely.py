@@ -1,32 +1,37 @@
-import requests
+from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
+import time
 
-all_jobs = []
 
-
-def scrape_wwr(keyword):
+def wwr(keyword):
     url = f"https://weworkremotely.com/remote-jobs/search?term={keyword}"
-    response = requests.get(url)
-    soup = BeautifulSoup(response.content, "html.parser")
-    jobs = soup.find("section", class_="jobs")
-    if jobs is None:
-        return []
-    jobs = jobs.find_all("li")
+    p = sync_playwright().start()
+    browser = p.chromium.launch(headless=False)
+    page = browser.new_page()
+    page.goto(url)
+    time.sleep(3)
+    content = page.content()
+    page.close()
+
+    soup = BeautifulSoup(content, "html.parser")
+    section = soup.select_one("section.jobs")
+    if not section:
+        return None
+    jobs = section.select("article > ul > li")[:-1]
+    job_info = []
     for job in jobs:
-        title_data = job.find("span", class_="title")
-        if title_data == None:
+        if job.select_one(".title--ad"):
             continue
-        title = title_data.text
-        company, position, region = (
-            company.text for company in job.find_all("span", class_="company")
+        title = job.select_one("span.title").text
+        company, position, region = [obj.text for obj in job.select(".company")]
+        link = job.select("a")[1]["href"]
+        job_info.append(
+            {
+                "title": title,
+                "company": company,
+                "position": position,
+                "region": region,
+                "link": link,
+            }
         )
-        link = job.find("div", class_="tooltip--flag-logo").next_sibling["href"]
-        job_data = {
-            "title": title,
-            "company": company,
-            "position": position,
-            "region": region,
-            "link": f"https://weworkremotely.com{link}",
-        }
-        all_jobs.append(job_data)
-    return all_jobs
+    return job_info
