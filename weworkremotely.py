@@ -3,15 +3,15 @@ from bs4 import BeautifulSoup
 import time
 
 
-def wwr(keyword):
+def scrape_wwr(keyword):
     url = f"https://weworkremotely.com/remote-jobs/search?term={keyword}"
     p = sync_playwright().start()
-    browser = p.chromium.launch(headless=False)
+    browser = p.chromium.launch(headless=True)
     page = browser.new_page()
     page.goto(url)
-    time.sleep(3)
+    time.sleep(2)
     content = page.content()
-    page.close()
+    p.stop()
 
     soup = BeautifulSoup(content, "html.parser")
     section = soup.select_one("section.jobs")
@@ -31,7 +31,7 @@ def wwr(keyword):
                 "company": company,
                 "position": position,
                 "region": region,
-                "link": link,
+                "link": f"https://weworkremotely.com{link}",
             }
         )
     return job_info
