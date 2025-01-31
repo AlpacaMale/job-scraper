@@ -45,7 +45,15 @@ cd job-scraper
 pip install -r requirements.txt
 ```
 
-4. **Run main.py**
+4. **Set user-agent**
+
+`config.py`
+
+```
+user_agent = "Your User-Agent String"
+```
+
+5. **Run main.py**
 
 ```
 python app.py
