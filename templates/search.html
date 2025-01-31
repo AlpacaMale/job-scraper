@@ -1,40 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
     <title>Job Scrapper</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <main class="container">
-        <h1>Search Results for "{{keyword}}": </h1>
+      <h1>Search Results for "{{keyword}}":</h1>
+      <div style="display: flex; justify-content: space-between">
+        <a href="/">Back to Home</a>
         <a href="/export?keyword={{keyword}}" target="_blank">Export to file</a>
-        <figure>
-            <table class="striped">
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Company</th>
-                        <th>Region</th>
-                        <th>Link</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for job in jobs %}
-                    <tr>
-                        <td>{{job.title}}</td>
-                        <td>{{job.company}}</td>
-                        <td>{{job.region}}</td>
-                        <td><a href="{{job.link}}" target="_blank">Apply now &rarr;</a></td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </figure>
+      </div>
+      <figure>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Company</th>
+              <th>Region</th>
+              <th>Link</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for job in jobs %}
+            <tr>
+              <td>{{job.title}}</td>
+              <td>{{job.company}}</td>
+              <td>{{job.region}}</td>
+              <td>
+                <a href="{{job.link}}" target="_blank">Apply now &rarr;</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </figure>
     </main>
-</body>
-
+  </body>
 </html>
