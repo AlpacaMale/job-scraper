@@ -33,7 +33,7 @@ def search():
 
 @app.route("/export")
 def export():
-    keyword = request.args.get("keyword")
+    keyword = request.args.get("keyword").replace(" ", "_")
     if keyword == None or keyword == "":
         return redirect("/")
     if keyword not in db:
