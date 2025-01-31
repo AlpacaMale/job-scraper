@@ -7,31 +7,29 @@ def scrape_remoteok(keyword):
     url = f"https://remoteok.com/remote-{keyword}-jobs"
 
     p = sync_playwright().start()
-    browser = p.chromium.launch()
+    browser = p.chromium.launch(headless=True)
     page = browser.new_page()
     page.goto(url)
     time.sleep(2)
     content = page.content()
     p.stop()
     soup = BeautifulSoup(content, "html.parser")
-    jobs = soup.find("tbody").find_all("tr", class_="job")
-    all_jobs = []
+    jobs = soup.select("table#jobsboard > tbody > tr.job")
+    job_info = []
     for job in jobs:
-        title = job.find("h2", itemprop="title").text.strip()
-        company = job.find("h3", itemprop="name").text.strip()
-        position = ", ".join(
-            position.text.strip()
-            for position in job.find("td", class_="tags").find_all("h3")
+        title = job.select_one("h2[itemprop='title']").text.strip()
+        company = job.select_one("h3[itemprop='name']").text.strip()
+        position = ", ".join(tag.text.strip() for tag in job.select(".tag > h3"))
+        region_data = job.select(".location")[:-1]
+        region = region_data[0].text if region_data else ""
+        link = job.select_one("a")["href"]
+        job_info.append(
+            {
+                "title": title,
+                "company": company,
+                "position": position,
+                "region": region,
+                "link": f"https://remoteok.com{link}",
+            }
         )
-        region_datas = job.find_all("div", class_="location")
-        region = region_datas[0].text if len(region_datas) == 2 else ""
-        link = f"https://remoteok.com{job.find('a',class_='preventLink')['href']}"
-        job_data = {
-            "title": title,
-            "company": company,
-            "position": position,
-            "region": region,
-            "link": link,
-        }
-        all_jobs.append(job_data)
-    return all_jobs
+    return job_info
