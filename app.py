@@ -9,7 +9,7 @@ db = {}
 
 @app.route("/")
 def home():
-    return render_template("index.html", name="nico")
+    return render_template("index.html")
 
 
 @app.route("/search")
@@ -23,7 +23,10 @@ def search():
         wwr = scrape_wwr(keyword)
         remote = scrape_remoteok(keyword)
         wanted = scrape_wanted(keyword)
-        jobs = wwr + remote + wanted
+        jobs = []
+        for data in (wwr, remote, wanted):
+            if data:
+                jobs.extend(data)
         db[keyword] = jobs
     return render_template("search.html", keyword=keyword, jobs=jobs)
 
@@ -36,7 +39,8 @@ def export():
     if keyword not in db:
         return redirect(f"/search?keyword={keyword}")
     save_to_file(keyword, db[keyword])
-    return send_file(f"{keyword}.csv", as_attachment=True)
+    return send_file(f"data/{keyword}.csv", as_attachment=True)
 
 
-app.run(debug=True)
+if __name__ == "__main__":
+    app.run(debug=False)
